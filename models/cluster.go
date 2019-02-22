@@ -3,7 +3,6 @@ package models
 import (
 	"ClusterManager/utils"
 	"fmt"
-	"github.com/astaxie/beego"
 )
 
 var CLUSTER_OBJ Cluster = Cluster{}
@@ -51,12 +50,15 @@ func CheckMaster() {
 }
 
 func CheckProcess() {
-	if !utils.ProcessExist(CLUSTER_OBJ.LocalPid) {
+	pid, err := utils.GetPid()
+	fmt.Println(pid)
+	fmt.Println(err)
+	if !utils.ProcessExist(pid) || err != nil {
 		CLUSTER_OBJ.ProcessStatus = false
 		fmt.Println("!utils.ProcessExist")
 		SetRole("error")
 	}
-	if utils.ProcessExist(CLUSTER_OBJ.LocalPid) && CLUSTER_OBJ.ProcessStatus == false {
+	if utils.ProcessExist(pid) && CLUSTER_OBJ.ProcessStatus == false {
 		CLUSTER_OBJ.ProcessStatus = true
 		SetRole("slave")
 	}
@@ -71,5 +73,4 @@ func init() {
 	CLUSTER_OBJ.Role = "slave"
 	CLUSTER_OBJ.BindURL = utils.GetBindURL()
 	CLUSTER_OBJ.Hosts = utils.GetHosts()
-	CLUSTER_OBJ.LocalPid, _ = beego.AppConfig.Int("cluster::pid")
 }
