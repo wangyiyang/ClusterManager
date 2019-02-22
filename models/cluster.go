@@ -1,21 +1,22 @@
 package models
 
-import (
-	"sync"
-)
-
-var CLUSTER_OBJ *Cluster
-var once sync.Once
-
-func GetIns() *Cluster {
-	once.Do(func() {
-		CLUSTER_OBJ = &Cluster{}
-	})
-	return CLUSTER_OBJ
-}
+var CLUSTER_OBJ Cluster = Cluster{}
 
 type Cluster struct {
 	Role string
+}
+
+func findMaster() {
+
+}
+
+func checkMaster() {
+
+}
+
+func setRole(role string) string {
+	CLUSTER_OBJ.Role = role
+	return CLUSTER_OBJ.Role
 }
 
 func init() {

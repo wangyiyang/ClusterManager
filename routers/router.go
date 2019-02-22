@@ -15,7 +15,7 @@ import (
 
 func init() {
 	ns := beego.NewNamespace("/v1",
-		beego.NSNamespace("/Cluster",
+		beego.NSNamespace("/cluster",
 			beego.NSInclude(
 				&controllers.ClusterController{},
 			),
