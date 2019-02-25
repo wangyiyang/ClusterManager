@@ -16,9 +16,9 @@ type Cluster struct {
 }
 
 func FindMaster() []string {
+	logs.Info("start FindMaster()")
 	result := []string{}
 	hosts := utils.GetHosts()
-
 	for _, host := range hosts {
 		if host != CLUSTER_OBJ.BindURL {
 			url := "http://" + host + "/v1/cluster/role"
@@ -63,7 +63,7 @@ func CheckProcess() {
 }
 
 func SetRole(role string) string {
-	logs.Info("set role", role)
+	logs.Info("set role's status:", role)
 	CLUSTER_OBJ.Role = role
 	return CLUSTER_OBJ.Role
 }

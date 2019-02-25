@@ -13,5 +13,7 @@ func InitLogs() {
                                                             "level":`+level+`,
                                                                     "daily":true,
                                                                             "maxdays":10}`)
+	logs.EnableFuncCallDepth(true)
+	logs.SetLogFuncCallDepth(3)
 	logs.Async()
 }
