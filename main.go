@@ -2,8 +2,8 @@ package main
 
 import (
 	_ "ClusterManager/routers"
+	_ "ClusterManager/sysinit"
 	"ClusterManager/task"
-
 	"github.com/astaxie/beego"
 )
 

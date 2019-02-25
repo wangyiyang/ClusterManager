@@ -2,7 +2,7 @@ package models
 
 import (
 	"ClusterManager/utils"
-	"fmt"
+	"github.com/astaxie/beego/logs"
 )
 
 var CLUSTER_OBJ Cluster = Cluster{}
@@ -37,25 +37,23 @@ func FindMaster() []string {
 func CheckMaster() {
 	if CLUSTER_OBJ.ProcessStatus != false {
 		masters := FindMaster()
-		fmt.Println(masters)
 		if len(masters) > 1 && utils.In(masters, CLUSTER_OBJ.BindURL) {
-			fmt.Println("len(masters) > 1 && utils.In(masters, CLUSTER_OBJ.BindURL)")
+			logs.Error("master count:", len(masters))
 			SetRole("slave")
 		}
 		if len(masters) == 0 {
-			fmt.Println("len(masters) == 0")
+			logs.Error("no master")
 			SetRole("master")
 		}
 	}
 }
 
 func CheckProcess() {
+	logs.Info("start CheckProcess()")
 	pid, err := utils.GetPid()
-	fmt.Println(pid)
-	fmt.Println(err)
 	if !utils.ProcessExist(pid) || err != nil {
+		logs.Error("Process Not Exist")
 		CLUSTER_OBJ.ProcessStatus = false
-		fmt.Println("!utils.ProcessExist")
 		SetRole("error")
 	}
 	if utils.ProcessExist(pid) && CLUSTER_OBJ.ProcessStatus == false {
@@ -65,12 +63,15 @@ func CheckProcess() {
 }
 
 func SetRole(role string) string {
+	logs.Info("set role", role)
 	CLUSTER_OBJ.Role = role
 	return CLUSTER_OBJ.Role
 }
 
+// TODO: 多线程单例
 func init() {
-	CLUSTER_OBJ.Role = "slave"
+	logs.Info("init cluster role")
+	SetRole("slave")
 	CLUSTER_OBJ.BindURL = utils.GetBindURL()
 	CLUSTER_OBJ.Hosts = utils.GetHosts()
 }
